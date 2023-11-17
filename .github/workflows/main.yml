@@ -1,12 +1,18 @@
-name: Deploy React to AWS
+name: Build and Deploy React to AWS
 on:
   push:
-    branches:
-      - "Docker-compose-CI/CD-AWS-Beanstalk"
+    branches: ['master']
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+        
   deploy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -19,8 +25,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: React-Demo
-          environment_name: React-Demo-env
+          application_name: Demo
+          environment_name: Demo-env
           version_label: ${{ github.sha }}
           existing_bucket_name: elasticbeanstalk-us-east-2-713994142424
           region: us-east-2
